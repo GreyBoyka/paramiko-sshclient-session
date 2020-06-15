@@ -11,13 +11,18 @@ example:
 from paramiko import Transport
 from sshclient_session import SSHClientSession
 
-trans = Transport(("192.168.1.2", 22))
-trans.connect(username="root", password="password")
-client = SSHClientSession()
-client._transport = trans
 
-client.exec_command('pwd')               # path: /root
-client.exec_command('cd /home')
-client.exec_command('pwd')               # path: /home
-client.close()
+def main():
+    trans = Transport(("192.168.1.2", 22))
+    trans.connect(username="root", password="password")
+    client = SSHClientSession()
+    client._transport = trans
+    
+    client.exec_command('pwd')               # path: /root
+    client.exec_command('cd /home')
+    client.exec_command('pwd')               # path: /home
+    client.close()
+
+if __name__ == '__main__':
+    main()
 ```
