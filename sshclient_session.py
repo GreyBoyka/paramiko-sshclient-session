@@ -48,16 +48,17 @@ class SSHClientSession(SSHClient):
         else:
             arr_cmd = [t.join(self.cd_list)]
 
-        if t in command:
-            cmd_list = command.split(t.strip())
-            for item in cmd_list:
-                self.cd_add(item)
-        else:
-            self.cd_add(command)
-
         arr_cmd.append(command)
         final = t.join(arr_cmd)
-        return super().exec_command(final, bufsize, timeout, get_pty, environment)
+        stdin, stdout, stderr = super().exec_command(final, bufsize, timeout, get_pty, environment)
+        if stderr.read().decode() == "":
+            if t in command:
+                cmd_list = command.split(t.strip())
+                for item in cmd_list:
+                    self.cd_add(item)
+            else:
+                self.cd_add(command)
+        return stdin, stdout, stderr
 
 
 def test_simple():
